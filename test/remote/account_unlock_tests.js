@@ -32,8 +32,11 @@ TestServer.start(config)
       )
       .then(
         function () {
-          // There's no public API to force an account into the "locked" state,
-          // but this will re-send the email regardless of actual account state.
+          return client.lockAccount(email, password)
+        }
+      )
+      .then(
+        function () {
           return client.resendAccountUnlockCode()
         }
       )
@@ -69,6 +72,11 @@ TestServer.start(config)
         .then(
           function () {
             return server.mailbox.waitForEmail(email)
+          }
+        )
+        .then(
+          function () {
+            return client.lockAccount(email, password)
           }
         )
         .then(

@@ -516,6 +516,69 @@ module.exports = function (
     },
     {
       method: 'POST',
+      path: '/account/lock',
+      config: {
+        validate: {
+          payload: {
+            email: validators.email().required(),
+            authPW: isA.string().min(64).max(64).regex(HEX_STRING).required()
+          }
+        }
+      },
+      handler: function (request, reply) {
+        log.begin('Account.lock', request)
+        var form = request.payload
+        var email = form.email
+        var authPW = Buffer(form.authPW, 'hex')
+
+        customs.check(
+          request.app.clientAddress,
+          email,
+          'accountLock')
+          .then(db.emailRecord.bind(db, email))
+          .then(
+            function (emailRecord) {
+              // The account is already locked, silently succeed.
+              if (emailRecord.lockedAt) {
+                return true
+              }
+              var password = new Password(
+                authPW,
+                emailRecord.authSalt,
+                emailRecord.verifierVersion
+              )
+
+              return password.matches(emailRecord.verifyHash)
+              .then(
+                function (match) {
+                  // a bit of a strange one, only lock the account if the
+                  // password matches, otherwise let customs handle any account
+                  // lock.
+                  if (match) {
+                    log.event('locked', { email: emailRecord.email, uid: emailRecord.uid })
+                    return db.lockAccount(emailRecord)
+                  } else {
+                    return customs.flag(request.app.clientAddress, emailRecord)
+                      .then(
+                        function () {
+                          throw error.incorrectPassword(emailRecord.email, email)
+                        }
+                      )
+                  }
+                }
+              )
+            }
+          )
+          .done(
+            function () {
+              reply({})
+            },
+            reply
+          )
+      }
+    },
+    {
+      method: 'POST',
       path: '/account/unlock/resend_code',
       config: {
         validate: {
@@ -530,6 +593,8 @@ module.exports = function (
       handler: function (request, reply) {
         log.begin('Account.UnlockCodeResend', request)
         var email = request.payload.email
+        var emailRecord
+
         customs.check(
           request.app.clientAddress,
           email,
@@ -538,10 +603,20 @@ module.exports = function (
             db.emailRecord.bind(db, email)
           )
           .then(
-            function (emailRecord) {
+            function (_emailRecord) {
+              if (! _emailRecord.lockedAt) {
+                throw new Error('not locked');
+              }
+
+              emailRecord = _emailRecord
+              return db.unlockCode(emailRecord)
+            }
+          )
+          .then(
+            function (unlockCode) {
               return mailer.sendUnlockCode(
                 emailRecord,
-                emailRecord.emailCode,
+                unlockCode,
                 {
                   service: request.payload.service,
                   redirectTo: request.payload.redirectTo,
@@ -574,15 +649,20 @@ module.exports = function (
         log.begin('Account.UnlockCodeVerify', request)
         var uid = request.payload.uid
         var code = Buffer(request.payload.code, 'hex')
+        var account = null
         db.account(Buffer(uid, 'hex'))
           .then(
-            function (account) {
+            function (_account) {
               // If the account isn't actually locked, they may be
               // e.g. clicking a stale link.  Silently succeed.
-              if (!account.lockedAt) {
+              if (! _account.lockedAt) {
                 return true
               }
-              if (!butil.buffersAreEqual(code, account.emailCode)) {
+              account = _account
+              return db.unlockCode(account)
+            })
+            .then(function (unlockCode) {
+              if (!butil.buffersAreEqual(code, Buffer(unlockCode, 'hex'))) {
                 throw error.invalidVerificationCode()
               }
               log.event('unlocked', { email: account.email, uid: account.uid })
@@ -704,6 +784,14 @@ module.exports = function (
 
   if (isProduction) {
     delete routes[0].config.validate.payload.preVerified
+
+    for (var i = 0; i < routes.length; ++i) {
+      var route = routes[i];
+      if (route.path === '/account/lock') {
+        routes = routes.splice(i, 1)
+        break
+      }
+    }
   }
 
   return routes
