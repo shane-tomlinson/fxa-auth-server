@@ -53,7 +53,6 @@
         "browserify": {
           "version": "5.9.1",
           "from": "browserify@5.9.1",
-          "resolved": "https://registry.npmjs.org/browserify/-/browserify-5.9.1.tgz",
           "dependencies": {
             "JSONStream": {
               "version": "0.8.4",
@@ -435,7 +434,7 @@
             },
             "glob": {
               "version": "3.2.11",
-              "from": "glob@~3.2.8",
+              "from": "glob@~ 3.2.1",
               "dependencies": {
                 "minimatch": {
                   "version": "0.3.0",
@@ -546,7 +545,7 @@
                   "dependencies": {
                     "readable-stream": {
                       "version": "1.1.13",
-                      "from": "readable-stream@^1.1.13-1",
+                      "from": "readable-stream@1.1",
                       "dependencies": {
                         "core-util-is": {
                           "version": "1.0.1",
@@ -645,7 +644,7 @@
                         },
                         "source-map": {
                           "version": "0.1.43",
-                          "from": "source-map@~0.1.40",
+                          "from": "source-map@~0.1.7",
                           "dependencies": {
                             "amdefine": {
                               "version": "0.1.0",
@@ -1183,12 +1182,13 @@
     },
     "fxa-auth-mailer": {
       "version": "1.0.6",
-      "from": "fxa-auth-mailer@git+https://github.com/mozilla/fxa-auth-mailer.git#rfk/unlock-email",
-      "resolved": "git+https://github.com/mozilla/fxa-auth-mailer.git#733a6f0ff947147d0f638c66d5b49873096fbab2",
+      "from": "fxa-auth-mailer@git+https://github.com/shane-tomlinson/fxa-auth-mailer.git#issue-16-unlock-email",
+      "resolved": "git+https://github.com/shane-tomlinson/fxa-auth-mailer.git#4b358bc49a979d7e91a62080931d93a536021e01",
       "dependencies": {
         "bluebird": {
           "version": "2.2.2",
-          "from": "bluebird@2.2.2"
+          "from": "https://registry.npmjs.org/bluebird/-/bluebird-2.2.2.tgz",
+          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.2.2.tgz"
         },
         "bunyan": {
           "version": "1.0.0",
@@ -1269,8 +1269,7 @@
           "dependencies": {
             "async": {
               "version": "0.1.22",
-              "from": "async@0.1.22",
-              "resolved": "https://registry.npmjs.org/async/-/async-0.1.22.tgz"
+              "from": "async@0.1.22"
             },
             "gobbledygook": {
               "version": "0.0.4",
@@ -1659,7 +1658,7 @@
         },
         "restify": {
           "version": "2.8.2",
-          "from": "restify@2.8.2",
+          "from": "https://registry.npmjs.org/restify/-/restify-2.8.2.tgz",
           "resolved": "https://registry.npmjs.org/restify/-/restify-2.8.2.tgz",
           "dependencies": {
             "assert-plus": {
@@ -1764,7 +1763,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@^1.2.11"
+              "from": "mime@~1.2.11"
             },
             "negotiator": {
               "version": "0.4.9",
@@ -1844,7 +1843,7 @@
         },
         "cryptiles": {
           "version": "2.0.4",
-          "from": "cryptiles@2.x.x"
+          "from": "cryptiles@2.0.4"
         },
         "h2o2": {
           "version": "2.0.1",
@@ -1896,8 +1895,7 @@
         },
         "qs": {
           "version": "2.3.2",
-          "from": "qs@2.3.2",
-          "resolved": "https://registry.npmjs.org/qs/-/qs-2.3.2.tgz"
+          "from": "qs@2.3.2"
         },
         "rejoice": {
           "version": "1.0.0",
@@ -1949,7 +1947,7 @@
         },
         "topo": {
           "version": "1.0.2",
-          "from": "topo@1.x.x"
+          "from": "topo@1.0.2"
         },
         "vision": {
           "version": "1.2.1",
@@ -2028,7 +2026,6 @@
     "request": {
       "version": "2.45.0",
       "from": "request@2.45.0",
-      "resolved": "https://registry.npmjs.org/request/-/request-2.45.0.tgz",
       "dependencies": {
         "bl": {
           "version": "0.9.4",
@@ -2102,7 +2099,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@^1.2.11"
+              "from": "mime@~1.2.11"
             },
             "async": {
               "version": "0.9.0",
