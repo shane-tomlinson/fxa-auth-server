@@ -43,6 +43,31 @@ module.exports = function (config, log) {
           }
         ))
       }
+      mailer.sendPasswordChangedNotification = function (email, opts) {
+        return P(mailer.passwordChangedEmail(
+          {
+            email: email,
+            acceptLanguage: opts.acceptLanguage || defaultLanguage
+          }
+        ))
+      }
+      mailer.sendPasswordResetNotification = function (email, opts) {
+        return P(mailer.passwordResetEmail(
+          {
+            email: email,
+            acceptLanguage: opts.acceptLanguage || defaultLanguage
+          }
+        ))
+      }
+      mailer.sendNewSyncDeviceNotification = function (email, opts) {
+        return P(mailer.newSyncDeviceEmail(
+          {
+            email: email,
+            acceptLanguage: opts.acceptLanguage || defaultLanguage
+          }
+        ))
+      }
+
       return mailer
     }
   )

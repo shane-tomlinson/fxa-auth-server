@@ -96,6 +96,28 @@ TestServer.start(config)
   )
 
   test(
+    'sync signin sends an email',
+    function (t) {
+      var email = server.uniqueEmail()
+      var password = 'abcdef'
+      return Client.createAndVerify(config.publicUrl, email, password, server.mailbox)
+        .then(
+          function (c) {
+            return Client.login(config.publicUrl, email, password, { service: 'sync' })
+          }
+        )
+        .then(
+          function (c) {
+            // wait for sync signin notification. The notification
+            // contains no links, so just wait for it to arrive without
+            // doing any header verification
+            return server.mailbox.waitForEmail(email)
+          }
+        )
+    }
+  )
+
+  test(
     'teardown',
     function (t) {
       server.stop()

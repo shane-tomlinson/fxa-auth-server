@@ -156,6 +156,18 @@ module.exports = function (
           )
           .then(
             function () {
+              return db.account(passwordChangeToken.uid)
+                .then(
+                  function (account) {
+                    return mailer.sendPasswordChangedNotification(account.email, {
+                      acceptLanguage: request.app.acceptLanguage
+                    })
+                  }
+                )
+            }
+          )
+          .then(
+            function () {
               return {}
             }
           )
@@ -314,6 +326,23 @@ module.exports = function (
         if (butil.buffersAreEqual(passwordForgotToken.passCode, code) &&
             passwordForgotToken.ttl() > 0) {
           db.forgotPasswordVerified(passwordForgotToken)
+            .then(
+              function (accountResetToken) {
+                return db.account(passwordForgotToken.uid)
+                  .then(
+                    function (account) {
+                      return mailer.sendPasswordResetNotification(account.email, {
+                        acceptLanguage: request.app.acceptLanguage
+                      })
+                    }
+                  )
+                  .then(
+                    function () {
+                      return accountResetToken
+                    }
+                  )
+              }
+            )
             .done(
               function (accountResetToken) {
                 reply(

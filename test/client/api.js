@@ -114,14 +114,18 @@ ClientApi.prototype.accountLogin = function (email, authPW, opts) {
   if (!opts) {
     opts = { keys: true }
   }
+  var postData = {
+    email: email,
+    authPW: authPW.toString('hex'),
+  }
+  if (opts.service) {
+    postData.service = opts.service
+  }
   return this.doRequest(
     'POST',
     this.baseURL + '/account/login' + (opts.keys ? '?keys=true' : ''),
     null,
-    {
-      email: email,
-      authPW: authPW.toString('hex')
-    }
+    postData
   )
 }
 

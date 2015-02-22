@@ -81,6 +81,11 @@ TestServer.start(config)
             t.ok(Buffer.isBuffer(keys.kA), 'kA exists, login after password reset')
             t.ok(Buffer.isBuffer(keys.wrapKb), 'wrapKb exists, login after password reset')
             t.equal(client.kB.length, 32, 'kB exists, has the right length')
+
+            // wait for password reset notification. The notification
+            // contains no links, so just wait for it to arrive without
+            // doing any header verification
+            return server.mailbox.waitForEmail(email)
           }
         )
     }
