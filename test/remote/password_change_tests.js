@@ -51,6 +51,11 @@ TestServer.start(config)
           function (keys) {
             t.deepEqual(keys.kB, kB, 'kB is preserved')
             t.deepEqual(keys.kA, kA, 'kA is preserved')
+
+            // wait for password changed notification. The notification
+            // contains no links, so just wait for it to arrive without
+            // doing any header verification
+            return server.mailbox.waitForEmail(email)
           }
         )
     }
