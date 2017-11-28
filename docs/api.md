@@ -39,7 +39,6 @@ see [`mozilla/fxa-js-client`](https://github.com/mozilla/fxa-js-client).
     * [GET /account/sessions (:lock: sessionToken)](#get-accountsessions)
     * [POST /account/device/destroy (:lock: sessionToken)](#post-accountdevicedestroy)
   * [Emails](#emails)
-    * [GET /recovery_email/check_can_add_secondary_address (:lock: sessionToken)](#get-recovery_emailcheck_can_add_secondary_address)
     * [GET /recovery_email/status (:lock: sessionToken)](#get-recovery_emailstatus)
     * [POST /recovery_email/resend_code (:lock: sessionToken)](#post-recovery_emailresend_code)
     * [POST /recovery_email/verify_code](#post-recovery_emailverify_code)
@@ -1293,14 +1292,6 @@ to use the API after this request has succeeded.
 
 ### Emails
 
-#### GET /recovery_email/check_can_add_secondary_address
-
-:lock: HAWK-authenticated with session token
-<!--begin-route-get-recovery_emailcheck_can_add_secondary_address-->
-Returns whether or not secondary emails is enabled for a user.
-<!--end-route-get-recovery_emailcheck_can_add_secondary_address-->
-
-
 #### GET /recovery_email/status
 
 :lock: HAWK-authenticated with session token
@@ -2221,6 +2212,12 @@ for an email address.
   The email address associated with the signin code.
   <!--end-response-body-post-signincodesconsume-email-->
 
+* `signinCodeData`: *string, optional*
+
+  <!--begin-response-body-post-signincodesconsume-signinCodeData-->
+  
+  <!--end-response-body-post-signincodesconsume-signinCodeData-->
+
 
 ### Sms
 
@@ -2256,6 +2253,12 @@ Sends an SMS message.
   <!--begin-request-body-post-sms-features-->
   Enabled features for the request.
   <!--end-request-body-post-sms-features-->
+
+* `signinCodeData`: *string, optional*
+
+  <!--begin-request-body-post-sms-signinCodeData-->
+  
+  <!--end-request-body-post-sms-signinCodeData-->
 
 ##### Error responses
 
